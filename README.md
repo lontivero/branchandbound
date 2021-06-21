@@ -1,6 +1,6 @@
 # Coins selection for changeless transactions
 
-[Wasabi Wallet](https://github.com/zkSNACKs/WalletWasabi/)2.0 coinjoins decompose the Alice's total registered amount in highly composable unequal outputs amounts. That means that many users will have their wallets with a combination of mixed and unmixed coins.
+[Wasabi Wallet](https://github.com/zkSNACKs/WalletWasabi/) 2.0 coinjoins decompose the Alice's total registered amount in highly composable unequal outputs amounts. That means that many users will have their wallets with a combination of mixed and unmixed coins.
 
 The hypothesis is that, given the composability of the standard denominations used in WW2.0, some variant of the [Branch and bound]() algorithm can achieve a higher success rate in finding coin sets that avoid change. 
 
@@ -25,6 +25,8 @@ $ dotnet run -- --random-denoms 1 --output rnd-denom-wallet-big.png | gnuplot
 ![Big random denominations wallet](https://raw.githubusercontent.com/lontivero/branchandbound/master/images/rnd-denom-wallet-big.png)
 
 
+As we can see in these figures when the wallet is compoused by coins with random values uniformly distributed in the range [dust. 8btc) the success rate is low (under 0.1) but it quite sensitive to the tolerance and then to the wallet's size (# of coins).
+
 ### Wallet with mixed coins only
 
 ```bash
@@ -44,4 +46,22 @@ $ dotnet run -- --random-denoms 1 --output std-denom-wallet-big.png | gnuplot
 ![Big standard denominations wallet](https://raw.githubusercontent.com/lontivero/branchandbound/master/images/std-denom-wallet-big.png)
 
 
+When the wallets is compoused by coins randomly choosen from standard denominations (WabiSabi greedy decomposition) then the success rate depends mostly explusively on the wallet's size, becoming almost alway 1 for gig enough wallets, what proves the composability power of the standard denominations.
 
+### Usage:
+
+```bash
+$ branch-and-bound [OPTIONS]
+
+--min-wallet-size   Minimum wallet size in coins (default: 0)
+--max-wallet-size   Maximum wallet size in coins (default: 100)
+--inc-wallet-size   Sampling increment in coins  (default: 1)
+--min-tolerance     Minimum tolerance in the search (default: 0)
+--max-tolerance     Maximum tolerance in the search (default: 100_000)
+--inc-tolerance     Sampling increment in tolerance (default: 1_000)
+--runs              How many times to execute the algorithm (default: 100)
+--random-denoms     Select coins value randomly from set: "rnd" or "std" (default: "std") 
+--plot              Create `gnuplot` script as output: (default: 1)
+--output            Create image file named (default:"bnb-output.png")
+
+```
